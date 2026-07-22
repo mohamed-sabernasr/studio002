@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STUDIO 002 — Woven for the Present Tense</title>
+<meta name="description" content="STUDIO 002 — a modern fashion house. Drop 002, SS26.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;1,6..96,500&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:      '#0E0D0C',
+          surface:  '#17150F',
+          surface2: '#1D1B15',
+          bone:     '#F2EEE6',
+          muted:    '#9A9184',
+          hair:     '#332F26',
+          brass:    '#C9A227',
+          brassdim: '#8A7220',
+        },
+        fontFamily: {
+          display: ['"Bodoni Moda"', 'serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"Space Mono"', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+
+  :root {
+	/* Colors */
+	--chat--color--primary: #000000;
+	--chat--color--primary-shade-50: #db4061;
+	--chat--color--primary--shade-100: #cf3c5c;
+	--chat--color--secondary: #20b69e;
+	--chat--color-secondary-shade-50: #1ca08a;
+	--chat--color-white: #fff;
+	--chat--color-light: #f2f4f8;
+	--chat--color-light-shade-50: #e6e9f1;
+	--chat--color-light-shade-100: #c2c5cc;
+	--chat--color-medium: #d2d4d9;
+	--chat--color-dark: #C9A227;
+	--chat--color-disabled: #d2d4d9;
+	--chat--color-typing: #404040;
+
+	/* Base Layout */
+	--chat--spacing: 1rem;
+	--chat--border-radius: 0.25rem;
+	--chat--transition-duration: 0.15s;
+	--chat--font-family:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+		'Helvetica Neue', sans-serif;
+
+	/* Window Dimensions */
+	--chat--window--width: 400px;
+	--chat--window--height: 600px;
+	--chat--window--bottom: var(--chat--spacing);
+	--chat--window--right: var(--chat--spacing);
+	--chat--window--z-index: 9999;
+	--chat--window--border: 1px solid var(--chat--color-light-shade-50);
+	--chat--window--border-radius: var(--chat--border-radius);
+	--chat--window--margin-bottom: var(--chat--spacing);
+
+	/* Header Styles */
+	--chat--header-height: auto;
+	--chat--header--padding: var(--chat--spacing);
+	--chat--header--background: var(--chat--color-dark);
+	--chat--header--color: var(--chat--color-light);
+	--chat--header--border-top: none;
+	--chat--header--border-bottom: none;
+	--chat--header--border-left: none;
+	--chat--header--border-right: none;
+	--chat--heading--font-size: 2em;
+	--chat--subtitle--font-size: inherit;
+	--chat--subtitle--line-height: 1.8;
+
+	/* Message Styles */
+	--chat--message--font-size: 1rem;
+	--chat--message--padding: var(--chat--spacing);
+	--chat--message--border-radius: var(--chat--border-radius);
+	--chat--message-line-height: 1.5;
+	--chat--message--margin-bottom: calc(var(--chat--spacing) * 1);
+	--chat--message--bot--background: var(--chat--color-white);
+	--chat--message--bot--color: var(--chat--color-dark);
+	--chat--message--bot--border: none;
+	--chat--message--user--background: var(--chat--color--secondary);
+	--chat--message--user--color: var(--chat--color-white);
+	--chat--message--user--border: none;
+	--chat--message--pre--background: rgba(0, 0, 0, 0.05);
+	--chat--messages-list--padding: var(--chat--spacing);
+
+	/* Toggle Button */
+	--chat--toggle--size: 64px;
+	--chat--toggle--width: var(--chat--toggle--size);
+	--chat--toggle--height: var(--chat--toggle--size);
+	--chat--toggle--border-radius: 50%;
+	--chat--toggle--background: var(--chat--color--primary);
+	--chat--toggle--hover--background: var(--chat--color--primary-shade-50);
+	--chat--toggle--active--background: var(--chat--color--primary--shade-100);
+	--chat--toggle--color: var(--chat--color-white);
+
+	/* Input Area */
+	--chat--textarea--height: 50px;
+	--chat--textarea--max-height: 30rem;
+	--chat--input--font-size: inherit;
+	--chat--input--border: 0;
+	--chat--input--border-radius: 0;
+	--chat--input--padding: 0.8rem;
+	--chat--input--background: var(--chat--color-white);
+	--chat--input--text-color: initial;
+	--chat--input--line-height: 1.5;
+	--chat--input--placeholder--font-size: var(--chat--input--font-size);
+	--chat--input--border-active: 0;
+	--chat--input--left--panel--width: 2rem;
+
+	/* Button Styles */
+	--chat--button--padding: calc(var(--chat--spacing) * 5 / 8) var(--chat--spacing);
+	--chat--button--border-radius: var(--chat--border-radius);
+	--chat--button--font-size: 1rem;
+	--chat--button--line-height: 1;
+	--chat--button--color--primary: var(--chat--color-light);
+	--chat--button--background--primary: var(--chat--color--secondary);
+	--chat--button--border--primary: none;
+	--chat--button--color--primary--hover: var(--chat--color-light);
+	--chat--button--background--primary--hover: var(--chat--color-secondary-shade-50);
+	--chat--button--border--primary--hover: none;
+	--chat--button--color--primary--disabled: var(--chat--color-light);
+	--chat--button--background--primary--disabled: #81bbb1;
+	--chat--button--border--primary--disabled: none;
+	--chat--button--color--secondary: var(--chat--color-light);
+	--chat--button--background--secondary: hsl(0, 0%, 58%);
+	--chat--button--border--secondary: none;
+	--chat--button--color--secondary--hover: var(--chat--color-light);
+	--chat--button--background--secondary--hover: hsl(0, 0%, 51%);
+	--chat--button--border--secondary--hover: none;
+	--chat--button--color--secondary--disabled: var(--chat--color-light);
+	--chat--button--background--secondary--disabled: hsl(0, 0%, 78%);
+	--chat--button--border--secondary--disabled: none;
+	--chat--close--button--color-hover: var(--chat--color--primary);
+
+	/* Send and File Buttons */
+	--chat--input--send--button--background: var(--chat--color-white);
+	--chat--input--send--button--color: var(--chat--color--secondary);
+	--chat--input--send--button--background-hover: var(--chat--color--primary-shade-50);
+	--chat--input--send--button--color-hover: var(--chat--color-secondary-shade-50);
+	--chat--input--file--button--background: var(--chat--color-white);
+	--chat--input--file--button--color: var(--chat--color--secondary);
+	--chat--input--file--button--background-hover: var(--chat--input--file--button--background);
+	--chat--input--file--button--color-hover: var(--chat--color-secondary-shade-50);
+	--chat--files-spacing: 0.25rem;
+
+	/* Body and Footer */
+	--chat--body--background: var(--chat--color-light);
+	--chat--footer--background: var(--chat--color-light);
+	--chat--footer--color: var(--chat--color-dark);
+}  
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0E0D0C;
+    font-family: 'Inter', sans-serif;
+    overscroll-behavior: none;
+  }
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .content-layer { position: relative; z-index: 1; }
+
+  ::selection { background: #C9A227; color: #0E0D0C; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0E0D0C; }
+  ::-webkit-scrollbar-thumb { background: #332F26; border-radius: 0; }
+
+  /* marquee */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 32s linear infinite;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* glassmorphism modal */
+  .glass {
+    background: rgba(23, 21, 15, 0.72);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(201, 162, 39, 0.18);
+  }
+
+  .field-input {
+    background: rgba(242,238,230,0.04);
+    border: 1px solid #332F26;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .field-input:focus {
+    outline: none;
+    border-color: #C9A227;
+    background: rgba(242,238,230,0.06);
+  }
+
+  .btn-primary {
+    background: #C9A227;
+    color: #0E0D0C;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .btn-primary:hover { background: #E0BA3B; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { background: #5C4E1E; color: #9A9184; cursor: not-allowed; }
+
+  .btn-ghost {
+    border: 1px solid #332F26;
+    color: #F2EEE6;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .btn-ghost:hover { border-color: #C9A227; background: rgba(201,162,39,0.06); }
+
+  .card-image {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-image::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(14,13,12,0) 40%, rgba(14,13,12,0.65) 100%);
+  }
+
+  .tag-num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-blur {
+    background: rgba(14,13,12,0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+    .fade-up { transition: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+
+<body class="bg-ink text-bone antialiased">
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="content-layer">
+
+  <!-- ============ NAV ============ -->
+  <nav id="mainNav" class="fixed top-0 inset-x-0 z-40 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-20">
+      <a href="#top" class="font-display text-2xl tracking-[0.15em] text-bone">STUDIO <span class="text-brass">002</span></a>
+
+      <div class="hidden md:flex items-center gap-10 font-body text-xs tracking-[0.2em] uppercase text-muted">
+        <a href="#catalog" class="hover:text-bone transition-colors">Catalog</a>
+        <a href="#manifesto" class="hover:text-bone transition-colors">Manifesto</a>
+        <a href="#support" class="hover:text-bone transition-colors">Support</a>
+      </div>
+
+      <button id="cartBtn" class="relative flex items-center gap-2 border border-hair px-4 py-2 hover:border-brass transition-colors">
+        <i class="fa-light fa-bag-shopping text-sm"></i>
+        <span class="font-mono text-xs tracking-widest">CART</span>
+        <span id="cartCount" class="font-mono text-xs text-brass tag-num">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header id="top" class="relative min-h-screen flex flex-col justify-end px-6 md:px-10 pb-20 pt-32">
+    <div class="max-w-7xl mx-auto w-full">
+      <div class="flex items-center gap-3 mb-6 font-mono text-xs tracking-[0.3em] text-brass uppercase">
+        <span class="w-8 h-px bg-brass"></span>
+        Drop 002 — SS26
+      </div>
+      <h1 class="font-display font-medium leading-[0.92] text-bone" style="font-size: clamp(3rem, 9vw, 8.5rem);">
+        Woven for the<br>
+        <span class="italic text-muted">present</span> tense.
+      </h1>
+      <div class="mt-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <p class="max-w-md font-body text-sm text-muted leading-relaxed">
+          A capsule of ten pieces, cut for movement and built to outlast the season that made them. No noise — just cloth, cut, and colour.
+        </p>
+        <a href="#catalog" class="btn-primary inline-flex items-center gap-3 px-8 py-4 font-mono text-xs tracking-[0.2em] uppercase w-max">
+          Enter the Catalog
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MARQUEE ============ -->
+  <div class="border-y border-hair py-4 overflow-hidden">
+    <div class="marquee-track font-display italic text-2xl md:text-3xl text-muted">
+      <div class="flex items-center gap-8 pr-8">
+        <span>Outerwear</span><span class="text-brass">•</span>
+        <span>Denim</span><span class="text-brass">•</span>
+        <span>Knitwear</span><span class="text-brass">•</span>
+        <span>Cargo</span><span class="text-brass">•</span>
+        <span>Graphic</span><span class="text-brass">•</span>
+        <span>Tailoring</span><span class="text-brass">•</span>
+      </div>
+      <div class="flex items-center gap-8 pr-8" aria-hidden="true">
+        <span>Outerwear</span><span class="text-brass">•</span>
+        <span>Denim</span><span class="text-brass">•</span>
+        <span>Knitwear</span><span class="text-brass">•</span>
+        <span>Cargo</span><span class="text-brass">•</span>
+        <span>Graphic</span><span class="text-brass">•</span>
+        <span>Tailoring</span><span class="text-brass">•</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CATALOG ============ -->
+  <section id="catalog" class="max-w-7xl mx-auto px-6 md:px-10 py-28">
+    <div class="flex items-end justify-between mb-14 fade-up">
+      <div>
+        <div class="font-mono text-xs tracking-[0.3em] text-brass uppercase mb-3">Full Collection</div>
+        <h2 class="font-display text-4xl md:text-5xl">The Catalog</h2>
+      </div>
+      <div class="hidden md:block font-mono text-xs text-muted">08 PIECES / SS26</div>
+    </div>
+
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-hair">
+      <!-- product cards injected by JS -->
+    </div>
+  </section>
+
+  <!-- ============ MANIFESTO ============ -->
+  <section id="manifesto" class="border-t border-hair">
+    <div class="max-w-7xl mx-auto px-6 md:px-10 py-28 grid md:grid-cols-2 gap-14 items-center">
+      <div class="fade-up">
+        <div class="font-mono text-xs tracking-[0.3em] text-brass uppercase mb-3">Manifesto</div>
+        <h2 class="font-display text-4xl md:text-5xl leading-tight mb-6">
+          Fewer garments.<br><span class="italic text-muted">Worn longer.</span>
+        </h2>
+        <p class="font-body text-sm text-muted leading-relaxed max-w-md">
+          Each drop is capped by design, not by hype. We cut in small runs, price honestly, and build every piece to survive more wears than the algorithm expects of it.
+        </p>
+      </div>
+      <div class="grid grid-cols-2 gap-px bg-hair fade-up">
+        <div class="bg-surface p-8">
+          <div class="font-display text-4xl text-brass mb-1">10</div>
+          <div class="font-mono text-xs text-muted uppercase tracking-wider">Pieces per drop</div>
+        </div>
+        <div class="bg-surface p-8">
+          <div class="font-display text-4xl text-brass mb-1">02</div>
+          <div class="font-mono text-xs text-muted uppercase tracking-wider">Drops per year</div>
+        </div>
+        <div class="bg-surface p-8">
+          <div class="font-display text-4xl text-brass mb-1">100%</div>
+          <div class="font-mono text-xs text-muted uppercase tracking-wider">Traceable cloth</div>
+        </div>
+        <div class="bg-surface p-8">
+          <div class="font-display text-4xl text-brass mb-1">∞</div>
+          <div class="font-mono text-xs text-muted uppercase tracking-wider">Repairs, free</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="support" class="border-t border-hair">
+    <div class="max-w-7xl mx-auto px-6 md:px-10 py-20 grid md:grid-cols-3 gap-12">
+      <div>
+        <div class="font-display text-2xl tracking-[0.15em] mb-4">STUDIO <span class="text-brass">002</span></div>
+        <p class="font-body text-sm text-muted max-w-xs leading-relaxed">Cut in small runs. Shipped worldwide. Questions land in the chat, bottom right.</p>
+      </div>
+      <div>
+        <div class="font-mono text-xs tracking-[0.2em] text-brass uppercase mb-4">Newsletter</div>
+        <form id="newsletterForm" class="flex border border-hair" onsubmit="return false;">
+          <input type="email" required placeholder="your@email.com" class="bg-transparent px-4 py-3 text-sm w-full focus:outline-none placeholder:text-muted">
+          <button class="px-5 font-mono text-xs uppercase text-brass hover:text-bone transition-colors">Join</button>
+        </form>
+      </div>
+      <div>
+        <div class="font-mono text-xs tracking-[0.2em] text-brass uppercase mb-4">Follow</div>
+        <div class="flex gap-4 text-lg text-muted">
+          <a href="#" class="hover:text-bone transition-colors"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="hover:text-bone transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#" class="hover:text-bone transition-colors"><i class="fa-brands fa-pinterest"></i></a>
+          <a href="#" class="hover:text-bone transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-hair py-6 px-6 md:px-10 max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-2 font-mono text-[11px] text-muted uppercase tracking-wider">
+      <span>© 2026 Studio 002. All rights reserved.</span>
+      <span>Made for the present tense.</span>
+    </div>
+  </footer>
+
+</div><!-- /content-layer -->
+
+<!-- ============ CART DRAWER ============ -->
+<div id="cartOverlay" class="fixed inset-0 bg-black/60 z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+<aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-surface border-l border-hair z-50 translate-x-full transition-transform duration-300 flex flex-col">
+  <div class="flex items-center justify-between px-6 py-6 border-b border-hair">
+    <h3 class="font-display text-2xl">Your Bag</h3>
+    <button id="closeCart" class="text-muted hover:text-bone transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+  </div>
+  <div id="cartItemsWrap" class="flex-1 overflow-y-auto px-6 py-6 space-y-6"></div>
+  <div class="px-6 py-6 border-t border-hair">
+    <div class="flex justify-between font-mono text-sm mb-4">
+      <span class="text-muted uppercase tracking-wider">Subtotal</span>
+      <span id="cartSubtotal" class="text-brass">$0.00</span>
+    </div>
+    <button id="cartCheckoutBtn" class="btn-primary w-full py-4 font-mono text-xs tracking-[0.2em] uppercase" disabled>Checkout</button>
+  </div>
+</aside>
+
+<!-- ============ ORDER MODAL ============ -->
+<div id="orderOverlay" class="fixed inset-0 bg-black/70 z-[60] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+  <div class="glass w-full max-w-md p-8 md:p-10 relative">
+
+    <button id="closeOrderModal" class="absolute top-6 right-6 text-muted hover:text-bone transition-colors">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+
+    <!-- FORM STATE -->
+    <div id="orderFormState">
+      <div class="font-mono text-xs tracking-[0.3em] text-brass uppercase mb-2">Checkout</div>
+      <h3 class="font-display text-3xl mb-8">Complete your order</h3>
+
+      <form id="orderForm" class="space-y-5" onsubmit="return false;">
+        <div>
+          <label class="block font-mono text-[11px] tracking-widest uppercase text-muted mb-2">Customer Name</label>
+          <input id="custName" type="text" required placeholder="Jane Appleseed" class="field-input w-full px-4 py-3 text-sm text-bone">
+        </div>
+        <div>
+          <label class="block font-mono text-[11px] tracking-widest uppercase text-muted mb-2">Customer Email</label>
+          <input id="custEmail" type="email" required placeholder="jane@email.com" class="field-input w-full px-4 py-3 text-sm text-bone">
+        </div>
+        <div>
+          <label class="block font-mono text-[11px] tracking-widest uppercase text-muted mb-2">Selected Product</label>
+          <select id="custProduct" class="field-input w-full px-4 py-3 text-sm text-bone"></select>
+        </div>
+        <div>
+          <label class="block font-mono text-[11px] tracking-widest uppercase text-muted mb-2">Quantity</label>
+          <input id="custQty" type="number" min="1" value="1" required class="field-input w-full px-4 py-3 text-sm text-bone">
+        </div>
+
+        <div id="orderError" class="hidden text-xs font-mono text-red-400 border border-red-900 bg-red-950/40 px-4 py-3"></div>
+
+        <button id="submitOrderBtn" type="submit" class="btn-primary w-full py-4 font-mono text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3">
+          <span id="submitBtnLabel">Place Order</span>
+          <i id="submitSpinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div id="orderSuccessState" class="hidden text-center py-6">
+      <div class="w-16 h-16 rounded-full border border-brass flex items-center justify-center mx-auto mb-6">
+        <i class="fa-solid fa-check text-brass text-xl"></i>
+      </div>
+      <div class="font-mono text-xs tracking-[0.3em] text-brass uppercase mb-2">Order Confirmed</div>
+      <h3 class="font-display text-3xl mb-4">Thank you.</h3>
+      <p class="font-body text-sm text-muted mb-8 leading-relaxed">A confirmation has been sent to your email. Our studio will reach out with dispatch details shortly.</p>
+      <button id="orderDoneBtn" class="btn-ghost px-8 py-3 font-mono text-xs tracking-[0.2em] uppercase">Continue Browsing</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+  <div class="glass px-6 py-4 flex items-center gap-3 font-mono text-xs tracking-wider uppercase">
+    <i class="fa-solid fa-check text-brass"></i>
+    <span id="toastMsg">Added to bag</span>
+  </div>
+</div>
+
+<!-- ============ N8N CHAT BOT EMBED ============ -->
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+  createChat({
+    webhookUrl: 'https://vmedo44.app.n8n.cloud/webhook-test/579b26d1-2ab0-4055-b826-1886f7c178a3',
+    target: '#n8n-chat-slot'
+  });
+</script>
+<div id="n8n-chat-slot" class="fixed bottom-6 right-6 z-[80]"></div>
+
+
+<script>
+/* =========================================================
+   PRODUCT DATA (WITH REAL CLOTHING IMAGES)
+========================================================= */
+const PRODUCTS = [
+  { id: 'p1', name: 'Oversized Hoodie',     price: 68,  category: 'Knitwear',  image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&q=80' },
+  { id: 'p2', name: 'Classic Denim Jacket', price: 118, category: 'Denim',     image: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=600&q=80' },
+  { id: 'p3', name: 'Cargo Pants',           price: 92,  category: 'Cargo',     image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&q=80' },
+  { id: 'p4', name: 'Graphic Tee',           price: 34,  category: 'Graphic',   image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80' },
+  { id: 'p5', name: 'Wool Overcoat',         price: 240, category: 'Outerwear', image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=600&q=80' },
+  { id: 'p6', name: 'Tailored Trousers',     price: 96,  category: 'Tailoring', image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&q=80' },
+  { id: 'p7', name: 'Ribbed Knit Sweater',   price: 74,  category: 'Knitwear',  image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&q=80' },
+  { id: 'p8', name: 'Utility Vest',          price: 88,  category: 'Cargo',     image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&q=80' },
+];
+
+const WEBHOOK_URL = 'https://vmedo44.app.n8n.cloud/webhook-test/579b26d1-2ab0-4055-b826-1886f7c178a3';
+
+/* =========================================================
+   RENDER PRODUCT GRID
+========================================================= */
+const grid = document.getElementById('productGrid');
+PRODUCTS.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'bg-ink group fade-up';
+  card.innerHTML = `
+    <div class="card-image aspect-[3/4] relative overflow-hidden bg-surface">
+      <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+      <div class="absolute top-4 left-4 font-mono text-[10px] tracking-widest uppercase text-bone bg-ink/70 px-2 py-1 z-10">${p.category}</div>
+    </div>
+    <div class="p-5">
+      <div class="flex items-start justify-between gap-2 mb-4">
+        <h3 class="font-display text-lg leading-tight">${p.name}</h3>
+        <span class="font-mono text-sm text-brass whitespace-nowrap">$${p.price.toFixed(2)}</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="add-to-cart-btn btn-ghost flex-1 py-2.5 font-mono text-[10px] tracking-[0.15em] uppercase" data-id="${p.id}">Add to Cart</button>
+        <button class="buy-now-btn btn-primary flex-1 py-2.5 font-mono text-[10px] tracking-[0.15em] uppercase" data-id="${p.id}">Buy Now</button>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+// populate product select in order form
+const custProductSelect = document.getElementById('custProduct');
+PRODUCTS.forEach(p => {
+  const opt = document.createElement('option');
+  opt.value = p.id;
+  opt.textContent = `${p.name} — $${p.price.toFixed(2)}`;
+  custProductSelect.appendChild(opt);
+});
+const cartBundleOption = document.createElement('option');
+cartBundleOption.value = 'CART_BUNDLE';
+cartBundleOption.textContent = 'Full Bag (multiple items)';
+custProductSelect.appendChild(cartBundleOption);
+
+/* =========================================================
+   CART STATE
+========================================================= */
+let cart = []; // {id, name, price, qty}
+
+function findProduct(id) { return PRODUCTS.find(p => p.id === id); }
+
+function addToCart(id, qty = 1) {
+  const existing = cart.find(i => i.id === id);
+  if (existing) { existing.qty += qty; }
+  else {
+    const p = findProduct(id);
+    cart.push({ id: p.id, name: p.name, price: p.price, qty });
+  }
+  renderCart();
+  showToast('Added to bag');
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  renderCart();
+}
+
+function cartSubtotal() {
+  return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+}
+
+function renderCart() {
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+
+  const wrap = document.getElementById('cartItemsWrap');
+  const checkoutBtn = document.getElementById('cartCheckoutBtn');
+
+  if (cart.length === 0) {
+    wrap.innerHTML = `<div class="text-center text-muted font-body text-sm py-16">Your bag is empty.</div>`;
+    checkoutBtn.disabled = true;
+  } else {
+    wrap.innerHTML = cart.map(i => {
+      const p = findProduct(i.id);
+      return `
+      <div class="flex items-center gap-4 border-b border-hair pb-6">
+        <img src="${p ? p.image : ''}" class="w-16 h-20 object-cover flex-shrink-0">
+        <div class="flex-1">
+          <div class="font-display text-base">${i.name}</div>
+          <div class="font-mono text-xs text-muted mt-1">Qty ${i.qty} · $${i.price.toFixed(2)}</div>
+        </div>
+        <button class="remove-cart-item text-muted hover:text-bone transition-colors" data-id="${i.id}">
+          <i class="fa-solid fa-trash-can text-sm"></i>
+        </button>
+      </div>
+    `}).join('');
+    checkoutBtn.disabled = false;
+  }
+
+  document.getElementById('cartSubtotal').textContent = `$${cartSubtotal().toFixed(2)}`;
+
+  wrap.querySelectorAll('.remove-cart-item').forEach(btn => {
+    btn.addEventListener('click', () => removeFromCart(btn.dataset.id));
+  });
+}
+
+/* Cart drawer open/close */
+const cartOverlay = document.getElementById('cartOverlay');
+const cartDrawer = document.getElementById('cartDrawer');
+function openCart() {
+  cartOverlay.classList.remove('opacity-0', 'pointer-events-none');
+  cartDrawer.classList.remove('translate-x-full');
+}
+function closeCartDrawer() {
+  cartOverlay.classList.add('opacity-0', 'pointer-events-none');
+  cartDrawer.classList.add('translate-x-full');
+}
+document.getElementById('cartBtn').addEventListener('click', openCart);
+document.getElementById('closeCart').addEventListener('click', closeCartDrawer);
+cartOverlay.addEventListener('click', closeCartDrawer);
+
+/* =========================================================
+   ORDER MODAL LOGIC
+========================================================= */
+const orderOverlay = document.getElementById('orderOverlay');
+const orderFormState = document.getElementById('orderFormState');
+const orderSuccessState = document.getElementById('orderSuccessState');
+const orderForm = document.getElementById('orderForm');
+const orderError = document.getElementById('orderError');
+
+function openOrderModal(productId, qty = 1) {
+  orderFormState.classList.remove('hidden');
+  orderSuccessState.classList.add('hidden');
+  orderError.classList.add('hidden');
+  orderForm.reset();
+  document.getElementById('custProduct').value = productId;
+  document.getElementById('custQty').value = qty;
+  orderOverlay.classList.remove('opacity-0', 'pointer-events-none');
+}
+
+function closeOrderModal() {
+  orderOverlay.classList.add('opacity-0', 'pointer-events-none');
+}
+
+document.getElementById('closeOrderModal').addEventListener('click', closeOrderModal);
+orderOverlay.addEventListener('click', (e) => { if (e.target === orderOverlay) closeOrderModal(); });
+document.getElementById('orderDoneBtn').addEventListener('click', closeOrderModal);
+
+/* Buy Now / Add to Cart delegated listeners */
+document.addEventListener('click', (e) => {
+  const buyBtn = e.target.closest('.buy-now-btn');
+  if (buyBtn) { openOrderModal(buyBtn.dataset.id, 1); }
+
+  const addBtn = e.target.closest('.add-to-cart-btn');
+  if (addBtn) { addToCart(addBtn.dataset.id, 1); }
+});
+
+document.getElementById('cartCheckoutBtn').addEventListener('click', () => {
+  closeCartDrawer();
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+  openOrderModal('CART_BUNDLE', totalQty);
+});
+
+/* Form submission -> webhook */
+orderForm.addEventListener('submit', async () => {
+  const name = document.getElementById('custName').value.trim();
+  const email = document.getElementById('custEmail').value.trim();
+  const productId = document.getElementById('custProduct').value;
+  const qty = parseInt(document.getElementById('custQty').value, 10) || 1;
+
+  orderError.classList.add('hidden');
+
+  if (!name || !email || qty < 1) {
+    orderError.textContent = 'Please fill in every field with a valid quantity.';
+    orderError.classList.remove('hidden');
+    return;
+  }
+
+  let payload;
+  if (productId === 'CART_BUNDLE') {
+    payload = {
+      customerName: name,
+      customerEmail: email,
+      selectedProduct: 'Full Bag (multiple items)',
+      quantity: qty,
+      items: cart,
+      totalPrice: cartSubtotal(),
+      timestamp: new Date().toISOString(),
+    };
+  } else {
+    const product = findProduct(productId);
+    payload = {
+      customerName: name,
+      customerEmail: email,
+      selectedProduct: product.name,
+      quantity: qty,
+      items: [{ id: product.id, name: product.name, price: product.price, qty }],
+      totalPrice: product.price * qty,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  const submitBtn = document.getElementById('submitOrderBtn');
+  const submitLabel = document.getElementById('submitBtnLabel');
+  const spinner = document.getElementById('submitSpinner');
+
+  submitBtn.disabled = true;
+  submitLabel.textContent = 'Placing Order…';
+  spinner.classList.remove('hidden');
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`Webhook responded with status ${res.status}`);
+
+    // success
+    if (productId === 'CART_BUNDLE') { cart = []; renderCart(); }
+    orderFormState.classList.add('hidden');
+    orderSuccessState.classList.remove('hidden');
+    showToast('Order confirmed');
+  } catch (err) {
+    orderError.textContent = 'We could not reach the order service. Please try again in a moment.';
+    orderError.classList.remove('hidden');
+    console.error('Order submission failed:', err);
+  } finally {
+    submitBtn.disabled = false;
+    submitLabel.textContent = 'Place Order';
+    spinner.classList.add('hidden');
+  }
+});
+
+/* =========================================================
+   TOAST
+========================================================= */
+let toastTimer;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.remove('translate-y-24', 'opacity-0');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.add('translate-y-24', 'opacity-0');
+  }, 2600);
+}
+
+/* =========================================================
+   NAV SCROLL STATE
+========================================================= */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 40) nav.classList.add('nav-blur', 'border-b', 'border-hair');
+  else nav.classList.remove('nav-blur', 'border-b', 'border-hair');
+});
+
+/* =========================================================
+   SCROLL REVEAL (fade-up)
+========================================================= */
+const revealEls = document.querySelectorAll('.fade-up');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach(el => revealObserver.observe(el));
+
+/* =========================================================
+   THREE.JS BACKGROUND — WOVEN THREAD FIELD
+========================================================= */
+(function initThree() {
+  const canvas = document.getElementById('bg-canvas');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 18);
+
+  /* ---- weave grid (points) ---- */
+  const COLS = 64, ROWS = 40;
+  const SPACING = 0.42;
+  const positions = new Float32Array(COLS * ROWS * 3);
+  const basePositions = new Float32Array(COLS * ROWS * 3);
+  const colors = new Float32Array(COLS * ROWS * 3);
+
+  const boneColor = new THREE.Color('#F2EEE6');
+  const brassColor = new THREE.Color('#C9A227');
+  const dimColor = new THREE.Color('#332F26');
+
+  let idx = 0;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const x = (c - COLS / 2) * SPACING;
+      const y = (r - ROWS / 2) * SPACING;
+      const z = 0;
+      positions[idx] = x; positions[idx + 1] = y; positions[idx + 2] = z;
+      basePositions[idx] = x; basePositions[idx + 1] = y; basePositions[idx + 2] = z;
+
+      const mixT = Math.random();
+      let col;
+      if ((c % 9 === 0) || (r % 11 === 0)) {
+        col = brassColor.clone().lerp(dimColor, 0.25);
+      } else {
+        col = dimColor.clone().lerp(boneColor, 0.12 + mixT * 0.08);
+      }
+      colors[idx] = col.r; colors[idx + 1] = col.g; colors[idx + 2] = col.b;
+      idx += 3;
+    }
+  }
+
+  const weaveGeo = new THREE.BufferGeometry();
+  weaveGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  weaveGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const weaveMat = new THREE.PointsMaterial({
+    size: 0.045,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.85,
+    sizeAttenuation: true,
+  });
+
+  const weave = new THREE.Points(weaveGeo, weaveMat);
+  weave.rotation.x = -0.15;
+  weave.position.y = 1.5;
+  scene.add(weave);
+
+  /* ---- hang-tag planes ---- */
+  const tagGroup = new THREE.Group();
+  const tagGeo = new THREE.PlaneGeometry(1.4, 2.0);
+  const tagPositions = [
+    [-7, 3, -4], [8, -2, -6], [-6, -4.5, -3], [6.5, 4, -5], [0, -6, -7]
+  ];
+  tagPositions.forEach((pos, i) => {
+    const mat = new THREE.MeshBasicMaterial({
+      color: i % 2 === 0 ? '#C9A227' : '#F2EEE6',
+      transparent: true,
+      opacity: 0.06,
+      side: THREE.DoubleSide,
+    });
+    const mesh = new THREE.Mesh(tagGeo, mat);
+    mesh.position.set(pos[0], pos[1], pos[2]);
+    mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * 0.4);
+    mesh.userData.spin = (Math.random() - 0.5) * 0.15;
+    mesh.userData.driftPhase = Math.random() * Math.PI * 2;
+
+    const edges = new THREE.EdgesGeometry(tagGeo);
+    const edgeMat = new THREE.LineBasicMaterial({ color: '#C9A227', transparent: true, opacity: 0.12 });
+    const border = new THREE.LineSegments(edges, edgeMat);
+    mesh.add(border);
+
+    tagGroup.add(mesh);
+  });
+  scene.add(tagGroup);
+
+  /* ---- mouse tracking ---- */
+  const mouse = new THREE.Vector2(0, 0);
+  const targetMouse = new THREE.Vector2(0, 0);
+  const raycaster = new THREE.Raycaster();
+  const groundPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  const mouseWorld = new THREE.Vector3();
+
+  window.addEventListener('mousemove', (e) => {
+    targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+  window.addEventListener('touchmove', (e) => {
+    if (!e.touches.length) return;
+    const t = e.touches[0];
+    targetMouse.x = (t.clientX / window.innerWidth) * 2 - 1;
+    targetMouse.y = -(t.clientY / window.innerHeight) * 2 + 1;
+  }, { passive: true });
+
+  function resize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+  window.addEventListener('resize', resize);
+
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    mouse.x += (targetMouse.x - mouse.x) * 0.04;
+    mouse.y += (targetMouse.y - mouse.y) * 0.04;
+
+    if (!prefersReducedMotion) {
+      raycaster.setFromCamera(mouse, camera);
+      raycaster.ray.intersectPlane(groundPlane, mouseWorld);
+
+      const posAttr = weaveGeo.attributes.position;
+      const arr = posAttr.array;
+      let i3 = 0;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const bx = basePositions[i3], by = basePositions[i3 + 1];
+          const wave = Math.sin(bx * 0.5 + t * 0.6) * 0.12 + Math.cos(by * 0.4 + t * 0.5) * 0.12;
+
+          const dx = bx - mouseWorld.x;
+          const dy = (by + weave.position.y) - mouseWorld.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const influence = Math.max(0, 1 - dist / 3.2);
+          const ripple = influence * influence * 0.9;
+
+          arr[i3 + 2] = wave + ripple;
+          i3 += 3;
+        }
+      }
+      posAttr.needsUpdate = true;
+
+      weave.rotation.z = mouse.x * 0.03;
+
+      tagGroup.children.forEach((mesh) => {
+        mesh.rotation.y += mesh.userData.spin * 0.01;
+        mesh.rotation.x += mesh.userData.spin * 0.006;
+        mesh.position.x += Math.sin(t * 0.15 + mesh.userData.driftPhase) * 0.0015;
+        mesh.position.y += Math.cos(t * 0.12 + mesh.userData.driftPhase) * 0.0015;
+      });
+
+      camera.position.x += (mouse.x * 1.4 - camera.position.x) * 0.03;
+      camera.position.y += (mouse.y * 0.8 - camera.position.y) * 0.03;
+      camera.lookAt(0, 0, 0);
+    }
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* init cart render on load */
+renderCart();
+</script>
+
+</body>
+<script type="module">
+	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+	createChat({
+	webhookUrl: 'https://vmedo44.app.n8n.cloud/webhook/233486eb-b817-41dc-b149-aca6dbafe3f7/chat',
+	webhookConfig: {
+		method: 'POST',
+		headers: {}
+	},
+	target: '#n8n-chat',
+	mode: 'window',
+	chatInputKey: 'chatInput',
+	chatSessionKey: 'sessionId',
+	loadPreviousSession: true,
+	metadata: {},
+	showWelcomeScreen: false,
+	defaultLanguage: 'en',
+	initialMessages: [
+		'Am here For you 👋',
+		'My name is Medo. How can I assist you today?'
+	],
+	i18n: {
+		en: {
+			title: 'Welcome To STUDIO 002 👋',
+			subtitle: "Feel Free To Ask Am always here.",
+			footer: '',
+			getStarted: 'New Conversation',
+			inputPlaceholder: 'Type your question..',
+		},
+	},
+	enableStreaming: false,
+});
+</script>
+</html>
